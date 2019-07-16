@@ -15,6 +15,12 @@
   </properties>
 
   <dependencies>
+    <!-- Dependancy to execute command line (batch file) form java / instead of Runtime or processBuilder -->
+  <dependency>
+ <groupId>org.codehaus.plexus</groupId>
+ <artifactId>plexus-utils</artifactId>
+ <version>3.0.24</version>
+</dependency>
   <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
 <dependency>
     <groupId>com.jcraft</groupId>

@@ -1,4 +1,4 @@
-package com.jschDemp;
+package com.jschDemo;
 
 
 import java.util.Vector;

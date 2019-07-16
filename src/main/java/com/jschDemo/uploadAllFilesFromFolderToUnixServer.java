@@ -1,7 +1,10 @@
-package com.jschDemp;
+package com.jschDemo;
 
 
-import java.util.Vector;
+import java.io.File;
+import java.util.Collection;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -14,7 +17,7 @@ import com.jcraft.jsch.Session;
  * LinkedIn: https://www.linkedin.com/in/panarkhede89/
  */
 
-public class downloadMultipleFilesFromUnixServer 
+public class uploadAllFilesFromFolderToUnixServer 
 {
 	public static void main( String[] args ) throws Exception
 	{
@@ -43,7 +46,6 @@ public class downloadMultipleFilesFromUnixServer
 		} catch (JSchException e) {
 			throw new RuntimeException("Failed to create Jsch Session object.", e);
 		}
-
 		try {
 			session.connect();
 			channel = session.openChannel("sftp");
@@ -51,24 +53,25 @@ public class downloadMultipleFilesFromUnixServer
 			channel.connect();        
 
 			sftp = (ChannelSftp) channel;
-			Vector<ChannelSftp.LsEntry> list = sftp.ls("."); 
 
-			// iterate through objects in list, identifying specific file names
-			for (ChannelSftp.LsEntry oListItem : list) {
-				// If it is a file (not a directory)
-				if (!oListItem.getAttrs().isDir()) {
-					// Grab the remote file ([remote filename], [local path/filename to write file to])
-					sftp.get(oListItem.getFilename(), "G:\\1. My Cources\\"+oListItem.getFilename());  // while testing, disable this or all of your test files will be grabbed
-					System.out.println("Downloaded File name: "+oListItem.getFilename());
-					
-					// Delete remote file
-					//sftp.rm(oListItem.getFilename());                  }
+			File localFile = new File("G:\\1. My Cources\\UNIX for Testers\\Other Files");
+			if (localFile.exists()) {
+				//to use fileutils, need org.apache.commons.io.FileUtils dependency
+				Collection<File> fileList = FileUtils.listFiles(localFile, TrueFileFilter.TRUE, null);
+				try {
+					sftp.mkdir("multipleFilesUpload");
+				} catch (Exception e) {
+					// ignore if folder exist
+				}
+				for (File file : fileList) {
+					sftp.put(file.getAbsolutePath(), "multipleFilesUpload");
+					System.out.println("File uploaded: "+file.getAbsolutePath());
 				}
 			}
-		} catch(Exception e) 
-		{
-			System.out.println(e.getMessage());
-		} finally {
+		} catch(Exception e) {		
+			System.out.println(e.getMessage());	
+		}
+		finally {
 
 			System.out.println("Execution completed !!!!!!");
 
@@ -90,4 +93,5 @@ public class downloadMultipleFilesFromUnixServer
 			}    
 		}
 	}
+
 }

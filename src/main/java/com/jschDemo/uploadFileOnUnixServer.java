@@ -1,4 +1,4 @@
-package com.jschDemp;
+package com.jschDemo;
 
 
 import com.jcraft.jsch.Channel;

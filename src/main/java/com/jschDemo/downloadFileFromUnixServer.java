@@ -1,10 +1,6 @@
-package com.jschDemp;
+package com.jschDemo;
 
 
-import java.io.File;
-import java.util.Collection;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -17,7 +13,7 @@ import com.jcraft.jsch.Session;
  * LinkedIn: https://www.linkedin.com/in/panarkhede89/
  */
 
-public class uploadAllFilesFromFolderToUnixServer 
+public class downloadFileFromUnixServer 
 {
 	public static void main( String[] args ) throws Exception
 	{
@@ -54,24 +50,12 @@ public class uploadAllFilesFromFolderToUnixServer
 
 			sftp = (ChannelSftp) channel;
 
-			File localFile = new File("G:\\1. My Cources\\UNIX for Testers\\Other Files");
-			if (localFile.exists()) {
-				//to use fileutils, need org.apache.commons.io.FileUtils dependency
-				Collection<File> fileList = FileUtils.listFiles(localFile, TrueFileFilter.TRUE, null);
-				try {
-					sftp.mkdir("multipleFilesUpload");
-				} catch (Exception e) {
-					// ignore if folder exist
-				}
-				for (File file : fileList) {
-					sftp.put(file.getAbsolutePath(), "multipleFilesUpload");
-					System.out.println("File uploaded: "+file.getAbsolutePath());
-				}
-			}
-		} catch(Exception e) {		
-			System.out.println(e.getMessage());	
-		}
-		finally {
+			sftp.get("/home/prakash/Filetoupload.txt", "G:\\FileDownload.txt");
+
+		} catch(Exception e) 
+		{
+			System.out.println(e.getMessage());
+		} finally {
 
 			System.out.println("Execution completed !!!!!!");
 
@@ -93,5 +77,4 @@ public class uploadAllFilesFromFolderToUnixServer
 			}    
 		}
 	}
-
 }

@@ -1,6 +1,7 @@
-package com.jschDemp;
+package com.jschDemo;
 
 import java.io.BufferedReader;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import com.jcraft.jsch.Session;
  * LinkedIn: https://www.linkedin.com/in/panarkhede89/
  */
 
-public class excuteAnyUnixCommand 
+public class ExecuteShellScript 
 {
     public static void main( String[] args ) throws Exception
     {
@@ -39,13 +40,13 @@ public class excuteAnyUnixCommand
             // session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
             java.util.Properties config = new java.util.Properties(); 
             
-            //disabling strict host key checking / Disable checking the host identity 
+            //disabling strict host key checking
             config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);
         } catch (JSchException e) {
             throw new RuntimeException("Failed to create Jsch Session object.", e);
         }
-        String command = "ls0 -la";
+        String command = "./script.sh";
         try {
             session.connect();
             Channel channel = session.openChannel("exec");
@@ -77,7 +78,8 @@ public class excuteAnyUnixCommand
             }
             //retrieve the exit status of the remote command corresponding to this channel
             //0 == success
-            //-1 == if the command not yet terminated (could be an error)            
+            //-1 == if the command not yet terminated (could be an error)   
+            waitForChannelClosure(channel, 45555);
             int exitStatus = channel.getExitStatus();
             System.out.println("Exit status code: "+exitStatus);
             
@@ -92,4 +94,26 @@ public class excuteAnyUnixCommand
             throw new RuntimeException("Error durring SSH command execution. Command: " + command);
         }
     }
+    
+    
+    
+    //wait for shell script to get executed.
+    private static void waitForChannelClosure(Channel channel, long maxwaitMs) {
+
+        final long until = System.currentTimeMillis() + maxwaitMs;
+
+        try {
+            while (!channel.isClosed() && System.currentTimeMillis() < until) { 
+                Thread.sleep(250);
+            }
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Interrupted", e);
+        }
+
+        if (!channel.isClosed()) {
+            throw new RuntimeException("Channel not closed in timely manner!");
+        }
+
+    };
 }

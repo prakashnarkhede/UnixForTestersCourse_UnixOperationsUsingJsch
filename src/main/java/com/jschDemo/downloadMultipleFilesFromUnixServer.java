@@ -1,6 +1,7 @@
-package com.jschDemp;
+package com.jschDemo;
 
 
+import java.util.Vector;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -13,7 +14,7 @@ import com.jcraft.jsch.Session;
  * LinkedIn: https://www.linkedin.com/in/panarkhede89/
  */
 
-public class downloadFileFromUnixServer 
+public class downloadMultipleFilesFromUnixServer 
 {
 	public static void main( String[] args ) throws Exception
 	{
@@ -42,6 +43,7 @@ public class downloadFileFromUnixServer
 		} catch (JSchException e) {
 			throw new RuntimeException("Failed to create Jsch Session object.", e);
 		}
+
 		try {
 			session.connect();
 			channel = session.openChannel("sftp");
@@ -49,9 +51,20 @@ public class downloadFileFromUnixServer
 			channel.connect();        
 
 			sftp = (ChannelSftp) channel;
+			Vector<ChannelSftp.LsEntry> list = sftp.ls("."); 
 
-			sftp.get("/home/prakash/Filetoupload.txt", "G:\\FileDownload.txt");
-
+			// iterate through objects in list, identifying specific file names
+			for (ChannelSftp.LsEntry oListItem : list) {
+				// If it is a file (not a directory)
+				if (!oListItem.getAttrs().isDir()) {
+					// Grab the remote file ([remote filename], [local path/filename to write file to])
+					sftp.get(oListItem.getFilename(), "G:\\1. My Cources\\"+oListItem.getFilename());  // while testing, disable this or all of your test files will be grabbed
+					System.out.println("Downloaded File name: "+oListItem.getFilename());
+					
+					// Delete remote file
+					//sftp.rm(oListItem.getFilename());                  }
+				}
+			}
 		} catch(Exception e) 
 		{
 			System.out.println(e.getMessage());
