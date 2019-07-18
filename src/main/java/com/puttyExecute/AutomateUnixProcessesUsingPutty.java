@@ -1,9 +1,7 @@
 
 package com.puttyExecute;
 
-import java.awt.Desktop;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -15,11 +13,11 @@ import org.codehaus.plexus.util.cli.WriterStreamConsumer;
 public class AutomateUnixProcessesUsingPutty {
 
 	public static void main(String[] args) throws IOException, Exception {
-		System.out.println("Started");	
-				
+		
 		///// Using plexus utils library
 		Commandline cmd = new Commandline();
-		cmd.setExecutable("G:\\executeFromPutty\\sendFileToHost.bat");
+		
+		cmd.setExecutable(System.getProperty("user.dir")+"//src//main//Resources//sendFileToHost.bat");
 
 		WriterStreamConsumer systemOut = new WriterStreamConsumer(
 	             new OutputStreamWriter(System.out));
@@ -36,7 +34,7 @@ public class AutomateUnixProcessesUsingPutty {
 	 
 	 
 	//Second way - Mostly used - Using processBuilder
-	ProcessBuilder processBuilder = new ProcessBuilder("G:\\executeFromPutty\\sendFileToHost.bat");				
+	ProcessBuilder processBuilder = new ProcessBuilder(System.getProperty("user.dir")+"//src//main//Resources//sendFileToHost.bat");
     try {
 
         Process process = processBuilder.start();
@@ -54,9 +52,9 @@ public class AutomateUnixProcessesUsingPutty {
         int exitVal = process.waitFor();
         if (exitVal == 0) {
             System.out.println(output);
+   	     System.out.println("Zero return code - Successful Execution");
             System.exit(0);
         } else {
-            //abnormal...
         }
 
     } catch (IOException e) {
