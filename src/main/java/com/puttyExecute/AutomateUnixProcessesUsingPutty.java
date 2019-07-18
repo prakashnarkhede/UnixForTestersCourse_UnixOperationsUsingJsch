@@ -16,7 +16,7 @@ public class AutomateUnixProcessesUsingPutty {
 
 	public static void main(String[] args) throws IOException, Exception {
 		System.out.println("Started");	
-		
+				
 		///// Using plexus utils library
 		Commandline cmd = new Commandline();
 		cmd.setExecutable("G:\\executeFromPutty\\sendFileToHost.bat");
@@ -29,12 +29,10 @@ public class AutomateUnixProcessesUsingPutty {
 	 
 	 int returnCode = CommandLineUtils.executeCommandLine(cmd, systemOut, systemErr);
 	 if (returnCode != 0) {
-	     System.out.println("Something Bad Happened!");
+	     System.out.println("Non Zero return code - Unsuccessful Execution");
 	 } else {
-	     System.out.println("Taaa!! ddaaaaa!!");
-	 };
-	
-
+	     System.out.println("Zero return code - Successful Execution");
+	 }
 	 
 	 
 	//Second way - Mostly used - Using processBuilder

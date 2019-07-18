@@ -1,4 +1,4 @@
-:: update puttu installation directory
+:: update putty installation directory
 :: used option -i to specify public key to access unix server
 :: to specify port explicitly, use option -P followed by port number
 :: if you use password instead, you can use option -pw followed by your password.
